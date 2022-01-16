@@ -206,7 +206,7 @@ public class DetalleApartados extends JDialog {
 							mostrarDetalleApartado(DetalleApartados.idApartado);
 							ConexionTableModel conexion = new ConexionTableModel();
 							try {
-								conexion.mostrardatosProductos("",PuntoDeVenta.JTResultado1);
+								conexion.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -266,7 +266,7 @@ public class DetalleApartados extends JDialog {
 					
 					
 					try {
-						instancia.mostrardatosProductos("",PuntoDeVenta.JTResultado1);
+						instancia.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

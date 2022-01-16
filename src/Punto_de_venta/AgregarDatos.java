@@ -199,10 +199,10 @@ public class AgregarDatos extends JDialog {
 					
 					ConexionTableModel ctm=new ConexionTableModel();
 					if(PuntoDeVenta.CodigoBarra.getText().equals("")) {
-						ctm.mostrardatosProductos("",PuntoDeVenta.JTResultado1);
+						ctm.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 					}else {
 						
-						ctm.mostrardatosProductos(PuntoDeVenta.CodigoBarra.getText(),PuntoDeVenta.JTResultado1);
+						ctm.mostrardatosProductos(PuntoDeVenta.CodigoBarra.getText(),PuntoDeVenta.tablaProductos);
 					}
 
 					JOptionPane.showMessageDialog(null, "EL PRODUCTO FUE AGREGADO CON EXITO");

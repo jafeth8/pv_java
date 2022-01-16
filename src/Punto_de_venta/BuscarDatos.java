@@ -61,7 +61,7 @@ public class BuscarDatos extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					try {
 						ConexionTableModel ctm=new ConexionTableModel("select * from productos where DESCRIPCION='"+PuntoDeVenta.CodigoBarra.getText()+"'");
-						PuntoDeVenta.JTResultado1.setModel(ctm.getTablemodel());
+						PuntoDeVenta.tablaProductos.setModel(ctm.getTablemodel());
 						producto.setText("");
 						BuscarDatos.dialog.setVisible(false);
 					} catch (Exception e2) {

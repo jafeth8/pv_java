@@ -488,32 +488,6 @@ public class SqlOperaciones {
 			e.printStackTrace();
 		}
 	}
-	/*
-	public Double obtenerGanaciasSocios(String fecha) {
-		
-		//SELECT valor FROM cporcentaje_comision
-		String sql="SELECT SUM((precio_unitario)*cantidad)-SUM((costo_unitario)*cantidad) as ganancias FROM "
-				+ "detalle_ventas JOIN ventas ON detalle_ventas.fk_id_venta=ventas.id_venta JOIN clientes ON ventas.fk_id_cliente=clientes.id_cliente WHERE clientes.fk_id_tipo_cliente=2 GROUP BY MONTH("+fecha+"),YEAR("+fecha+")";
-				
-		Double ganancias=0.0;    	 
-		    
-        try {
-            Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            while(rs.next()){
-            	
-                ganancias=rs.getDouble(1);
-              
-            }
-           
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }finally {
-        	//Aqui no se cierra la conexion para permitir mas operaciones
-		} 
-        return ganancias;
-	}
-	*/
 	public int obtenerPorcentajeComision() {
 
 		// SELECT valor FROM cporcentaje_comision

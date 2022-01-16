@@ -81,7 +81,7 @@ public class EliminarDatos extends JDialog {
 					stmnt=conn.createStatement();
 					stmnt.executeUpdate("delete from productos where DESCRIPCION='"+producto.getText()+"' or CODIGO_BARRA='"+producto.getText()+"' ;");
 					ConexionTableModel ctm=new ConexionTableModel("select * from productos");
-					PuntoDeVenta.JTResultado1.setModel(ctm.getTablemodel());
+					PuntoDeVenta.tablaProductos.setModel(ctm.getTablemodel());
 					JOptionPane.showMessageDialog(null, "EL PRODUCTO FUE BORRADO CON EXITO");
 					producto.setText("");
 					PuntoDeVenta.CodigoBarra.setText("");

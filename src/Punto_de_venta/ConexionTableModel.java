@@ -242,29 +242,29 @@ public class ConexionTableModel {
 		    modelo.addColumn("SUB_TOTAL");
 		    modelo.addColumn("DESCUENTO");
 		   
-		    PuntoDeVenta.table.setModel(modelo);
+		    PuntoDeVenta.tablaCompras.setModel(modelo);
 		    /*-----------------------------tamaño de columnas*------------------------------*/
-		    TableColumn columnaId=PuntoDeVenta.table.getColumn("ID");
+		    TableColumn columnaId=PuntoDeVenta.tablaCompras.getColumn("ID");
 			columnaId.setMinWidth(60);
 			columnaId.setPreferredWidth(60);
 			columnaId.setMaxWidth(65);
 			
-		    TableColumn columnaCantidad=PuntoDeVenta.table.getColumn("CANTIDAD");
+		    TableColumn columnaCantidad=PuntoDeVenta.tablaCompras.getColumn("CANTIDAD");
 			columnaCantidad.setMinWidth(100);
 			columnaCantidad.setPreferredWidth(100);
 			columnaCantidad.setMaxWidth(100);
 			
-		    TableColumn columnaPrecioUnitario=PuntoDeVenta.table.getColumn("PRECIO UNITARIO");
+		    TableColumn columnaPrecioUnitario=PuntoDeVenta.tablaCompras.getColumn("PRECIO UNITARIO");
 			columnaPrecioUnitario.setMinWidth(200);
 			columnaPrecioUnitario.setPreferredWidth(200);
 			columnaPrecioUnitario.setMaxWidth(200);
 			
-		    TableColumn columnaSubTotal=PuntoDeVenta.table.getColumn("SUB_TOTAL");
+		    TableColumn columnaSubTotal=PuntoDeVenta.tablaCompras.getColumn("SUB_TOTAL");
 			columnaSubTotal.setMinWidth(200);
 			columnaSubTotal.setPreferredWidth(200);
 			columnaSubTotal.setMaxWidth(200);
 			
-		    TableColumn columnaDescuento=PuntoDeVenta.table.getColumn("DESCUENTO");
+		    TableColumn columnaDescuento=PuntoDeVenta.tablaCompras.getColumn("DESCUENTO");
 			columnaDescuento.setMinWidth(80);
 			columnaDescuento.setPreferredWidth(80);
 			columnaDescuento.setMaxWidth(85);
@@ -298,7 +298,7 @@ public class ConexionTableModel {
 		                
 		                modelo.addRow(datos);
 		            }
-		            PuntoDeVenta.table.setModel(modelo);
+		            PuntoDeVenta.tablaCompras.setModel(modelo);
 		        } catch (SQLException ex) {
 		            ex.printStackTrace();
 		        }finally {
@@ -472,37 +472,37 @@ public class ConexionTableModel {
  }
 	
  public void establecerTamanioJTable() {
-	    TableColumn columnaId=PuntoDeVenta.JTResultado1.getColumn("ID");
+	    TableColumn columnaId=PuntoDeVenta.tablaProductos.getColumn("ID");
 		columnaId.setMinWidth(60);
 		columnaId.setPreferredWidth(60);
 		columnaId.setMaxWidth(65);
 		
-		TableColumn columnaCodigoBarra=PuntoDeVenta.JTResultado1.getColumn("CODIGO_BARRA");
+		TableColumn columnaCodigoBarra=PuntoDeVenta.tablaProductos.getColumn("CODIGO_BARRA");
 		columnaCodigoBarra.setMinWidth(150);
 		columnaCodigoBarra.setPreferredWidth(150);
 		columnaCodigoBarra.setMaxWidth(150);
 		
-		TableColumn columnaCantidad=PuntoDeVenta.JTResultado1.getColumn("CANTIDAD");
+		TableColumn columnaCantidad=PuntoDeVenta.tablaProductos.getColumn("CANTIDAD");
 		columnaCantidad.setMinWidth(60);
 		columnaCantidad.setPreferredWidth(60);
 		columnaCantidad.setMaxWidth(65);
 		
-		TableColumn columnaDescripcion=PuntoDeVenta.JTResultado1.getColumn("DESCRIPCION");
+		TableColumn columnaDescripcion=PuntoDeVenta.tablaProductos.getColumn("DESCRIPCION");
 		columnaDescripcion.setMinWidth(600);
 		columnaDescripcion.setPreferredWidth(600);
 		columnaDescripcion.setMaxWidth(605);
 		
-		TableColumn columnaPrecioUnitario=PuntoDeVenta.JTResultado1.getColumn("PRECIO UNITARIO");
+		TableColumn columnaPrecioUnitario=PuntoDeVenta.tablaProductos.getColumn("PRECIO UNITARIO");
 		columnaPrecioUnitario.setMinWidth(120);
 		columnaPrecioUnitario.setPreferredWidth(120);
 		columnaPrecioUnitario.setMaxWidth(125);
 		
-		TableColumn columnaCostoProducto=PuntoDeVenta.JTResultado1.getColumn("COSTO PRODUCTO");
+		TableColumn columnaCostoProducto=PuntoDeVenta.tablaProductos.getColumn("COSTO PRODUCTO");
 		columnaCostoProducto.setMinWidth(120);
 		columnaCostoProducto.setPreferredWidth(120);
 		columnaCostoProducto.setMaxWidth(125);
 		
-		TableColumn columnaCategoria=PuntoDeVenta.JTResultado1.getColumn("CATEGORIA");
+		TableColumn columnaCategoria=PuntoDeVenta.tablaProductos.getColumn("CATEGORIA");
 		columnaCategoria.setMinWidth(140);
 		columnaCategoria.setPreferredWidth(140);
 		columnaCategoria.setMaxWidth(145);

@@ -222,7 +222,7 @@ public class ProductosParaAniadir extends JDialog {
 					ConexionTableModel obj =new ConexionTableModel();
 					try {
 						//obj.mostrardatos("");
-						obj.mostrardatosProductos("",PuntoDeVenta.JTResultado1);
+						obj.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

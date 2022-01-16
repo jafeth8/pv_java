@@ -61,7 +61,7 @@ public class PuntoDeVenta extends JFrame {
 	static JLabel TOTAL = new JLabel(" $     0.0");
 	
 	
-	public static JTable JTResultado1;
+	public static JTable tablaProductos;
 	static double ca;
 	static JButton Cotizar = new JButton("COTIZAR");
 	static int cantidadProductosIngresada;
@@ -112,7 +112,7 @@ public class PuntoDeVenta extends JFrame {
 	Vector<String> vee = new Vector<String>();
 	
 	JTextField textField = new JTextField();
-	static JTable table;
+	static JTable tablaCompras;
 	private JTable table2;
 	private JTextField CantidadProductos;
 	static JTextField textFieldDescuento;
@@ -123,22 +123,17 @@ public class PuntoDeVenta extends JFrame {
 	 * Launch the application.
 	 */
 	
-	
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					frame.setVisible(true);
-					
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		
-		
 	}
 
 	/**
@@ -202,7 +197,7 @@ public class PuntoDeVenta extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Metodos instanciaMeotodos=new Metodos();
-				instanciaMeotodos.busquedaCodigoDeBarras(JTResultado1,table, textFieldDescuento, CodigoBarra, comboBox, CantidadProductos, TOTAL,Ruta.nametablaTcompras);	
+				instanciaMeotodos.busquedaCodigoDeBarras(tablaProductos,tablaCompras, textFieldDescuento, CodigoBarra, comboBox, CantidadProductos, TOTAL,Ruta.nametablaTcompras);	
 			}
 		});
 		
@@ -211,7 +206,7 @@ public class PuntoDeVenta extends JFrame {
 		scrollPane_1.setToolTipText("Mostrar Todo los productos");
 		getContentPane().add(scrollPane_1);
 		
-		table = new JTable();
+		tablaCompras = new JTable();
 		try {
 			SqlOperaciones operacion=new SqlOperaciones();
 			
@@ -225,7 +220,7 @@ public class PuntoDeVenta extends JFrame {
 			e.printStackTrace();
 		}
 	
-		scrollPane_1.setViewportView(table);
+		scrollPane_1.setViewportView(tablaCompras);
 		
 		TFQuery1 = new JTextField();
 		TFQuery1.setBounds(0, 0, 0, 0);
@@ -236,19 +231,19 @@ public class PuntoDeVenta extends JFrame {
 		scrollPane.setBounds(27, 183, 1243, 125);
 		getContentPane().add(scrollPane);
 		
-		JTResultado1 = new JTable();
+		tablaProductos = new JTable();
 		
 		
-		JTResultado1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JTResultado1.setToolTipText("Tabla de productos");
-		scrollPane.setViewportView(JTResultado1);
+		tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablaProductos.setToolTipText("Tabla de productos");
+		scrollPane.setViewportView(tablaProductos);
 	
-		JTResultado1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		tablaProductos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		try {
 			ConexionTableModel ctm = new ConexionTableModel();
 			//ctm.mostrardatos("");
-			ctm.mostrardatosProductos("", JTResultado1);
+			ctm.mostrardatosProductos("", tablaProductos);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -300,10 +295,10 @@ public class PuntoDeVenta extends JFrame {
 						
 						operacion.insertApartados(idCliente,total,fechaApartado,total,"en deuda");
 						int idApartado=operacion.obtenerIdTablaApartado();
-						for (int i = 0; i < table.getRowCount(); i++) {
-							String idProducto=table.getValueAt(i,0).toString();
-							String precioUnitario=table.getValueAt(i,3).toString();
-							String cantidad=table.getValueAt(i, 1).toString();
+						for (int i = 0; i < tablaCompras.getRowCount(); i++) {
+							String idProducto=tablaCompras.getValueAt(i,0).toString();
+							String precioUnitario=tablaCompras.getValueAt(i,3).toString();
+							String cantidad=tablaCompras.getValueAt(i, 1).toString();
 							
 							int idProductoInteger=Integer.parseInt(idProducto);
 							String categoriaProducto=operacion.obtenerCategoriaTablaProducto(idProductoInteger);
@@ -311,7 +306,7 @@ public class PuntoDeVenta extends JFrame {
 							double precioUnitarioDouble=Double.parseDouble(precioUnitario);
 							//int cantidadInteger=Integer.parseInt(cantidad);
 							float cantidadDouble=Float.parseFloat(cantidad);
-							double descuento=Double.parseDouble(table.getValueAt(i,5).toString());
+							double descuento=Double.parseDouble(tablaCompras.getValueAt(i,5).toString());
 							
 							operacion.insertDetalleApartados(idApartado, idProductoInteger, costo_unitario, precioUnitarioDouble, cantidadDouble,fechaApartado,descuento);
 							//int cantidadTablaProducto=operacion.obtenerCantidadTablaProducto(idProductoInteger);
@@ -333,7 +328,7 @@ public class PuntoDeVenta extends JFrame {
 								for (int i = 0; i <2; i++) {
 									JOptionPane.showMessageDialog(null,"Apartado realizado correctamente");
 									//la variable NombreClienteApartados es inicializada por la clase o ventana 'MostrarClientes'
-									instanciaImprimir.imprimirApartado(table, TOTAL, UsuarioLabel,NombreClienteApartados);
+									instanciaImprimir.imprimirApartado(tablaCompras, TOTAL, UsuarioLabel,NombreClienteApartados);
 								}
 							}else {
 								JOptionPane.showMessageDialog(null,"Apartado realizado correctamente");
@@ -368,8 +363,8 @@ public class PuntoDeVenta extends JFrame {
 				
 				try {
 					//obj.mostrardatos("");
-					obj.mostrardatosProductos("",JTResultado1);
-					obj.datosTablaTcompras("", table, Ruta.nametablaTcompras);
+					obj.mostrardatosProductos("",tablaProductos);
+					obj.datosTablaTcompras("", tablaCompras, Ruta.nametablaTcompras);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -383,8 +378,8 @@ public class PuntoDeVenta extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				SqlOperaciones instancia = new SqlOperaciones();
 				ConexionTableModel instancia2 = new ConexionTableModel();
-				final int flsel = JTResultado1.getSelectedRow();
-				int idProducto = Integer.parseInt(JTResultado1.getValueAt(flsel, 0).toString());
+				final int flsel = tablaProductos.getSelectedRow();
+				int idProducto = Integer.parseInt(tablaProductos.getValueAt(flsel, 0).toString());
 				if (flsel == -1) {
 					JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR UN PRODUCTO", "Mensaje de Error",
 							JOptionPane.ERROR_MESSAGE);
@@ -397,7 +392,7 @@ public class PuntoDeVenta extends JFrame {
 						JOptionPane.showMessageDialog(null, "producto eliminado satisfactoriamente");
 						try {
 							//instancia2.mostrardatos("");
-							instancia2.mostrardatosProductos("", JTResultado1);
+							instancia2.mostrardatosProductos("", tablaProductos);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -421,7 +416,7 @@ public class PuntoDeVenta extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				Metodos instanciaMetodos= new Metodos();
 				try {
-					instanciaMetodos.addCarrito(JTResultado1, table, textFieldDescuento, CodigoBarra, TOTAL,Ruta.nametablaTcompras);
+					instanciaMetodos.addCarrito(tablaProductos, tablaCompras, textFieldDescuento, CodigoBarra, TOTAL,Ruta.nametablaTcompras);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -439,96 +434,67 @@ public class PuntoDeVenta extends JFrame {
 		lblAbarrotesDonPepe.setBounds(246, 11, 753, 68);
 		getContentPane().add(lblAbarrotesDonPepe);
 		
-		JButton button = new JButton("");
-		button.setBounds(496, 596, 136, 43);
-		button.addActionListener(new ActionListener() {
+		JButton botonPagar = new JButton("");
+		botonPagar.setBounds(496, 596, 136, 43);
+		botonPagar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				Metodos instancia=new Metodos();
-				Calendar fecha = new GregorianCalendar();
-				int anio = fecha.get(Calendar.YEAR);
-		        int mes = fecha.get(Calendar.MONTH)+1;
-		        int dia = fecha.get(Calendar.DAY_OF_MONTH);
-		        int hora = fecha.get(Calendar.HOUR_OF_DAY);
-		        int minuto = fecha.get(Calendar.MINUTE);
-		        int segundo = fecha.get(Calendar.SECOND);
-		        int idCliente;
+				float total;
+				float pagoIngresado;
 		        
 		        SqlOperaciones operacion =new SqlOperaciones();
 		        total=(float) operacion.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
-		        String pagar;
+		        String inputPagar;
+		        System.out.println("total compras--- "+total);
 				if(total==0)
 				{
 					JOptionPane.showMessageDialog(null,"DEBES GENERAR UNA VENTA PARA PAGAR","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 				}else {
 				
-				pagar=JOptionPane.showInputDialog("Ingrese con cuanto va a pagar");
-				ca=Double.parseDouble(pagar);
-				if (total>ca){
+				inputPagar=JOptionPane.showInputDialog("Ingrese con cuanto va a pagar");
+				pagoIngresado=Float.parseFloat(inputPagar);
+				if (total>pagoIngresado){
 					JOptionPane.showMessageDialog(null,"PAGO INSUFICIENTE","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 				}else
 				{
 						double cambioDelCliente;
-						cambioDelCliente=ca-total;
-						String cantidad1;
-						String descripcionCompras;			
+						cambioDelCliente=pagoIngresado-total;
+						String valorCantidadCompras;
+						String valorDescripcionCompras;			
 						String descripcionProductos;
-						String CantidadPro = null;
+						String valorCantidadProductos = null;
+						float existenciaDeCantidadEnTablaProductos;
 							
-							for (int j = 0; j < table.getRowCount(); j++) {
+							for (int j = 0; j < tablaCompras.getRowCount(); j++) {
 							
-								cantidad1=table.getValueAt(j, 1).toString();
-								descripcionCompras=table.getValueAt(j,2).toString();
-								
+								valorCantidadCompras=tablaCompras.getValueAt(j, 1).toString();
+								valorDescripcionCompras=tablaCompras.getValueAt(j,2).toString();
 								
 									try {
 										
 										ConexionTableModel ctm=new ConexionTableModel();
-										ctm.mostrardatosProductos("",JTResultado1);//se deben mostrar todos los productos para comparar las descripciones entre las dos tablas (importante no omitir este metodo)
-										for (int i = 0; i < JTResultado1.getRowCount(); i++) {
-											descripcionProductos=JTResultado1.getValueAt(i,3).toString();
-											if (descripcionCompras.equals(descripcionProductos)) {
-												CantidadPro=JTResultado1.getValueAt(i,2).toString();
-												float a=Float.parseFloat(cantidad1);
-												float b=Float.parseFloat(CantidadPro);
-												z=(b-a);
-												//System.out.println("variable z---- "+z );
-												stmnt.executeUpdate("UPDATE  `"+Ruta.database+"`.`productos` SET  `CANTIDAD` =  '"+z+"' WHERE  `productos`.`DESCRIPCION` ='"+descripcionCompras+"';");
+										ctm.mostrardatosProductos("",tablaProductos);//se deben mostrar todos los productos para comparar las descripciones entre las dos tablas (importante no omitir este metodo)
+										for (int i = 0; i < tablaProductos.getRowCount(); i++) {
+											descripcionProductos=tablaProductos.getValueAt(i,3).toString();
+											if (valorDescripcionCompras.equals(descripcionProductos)) {
+												valorCantidadProductos=tablaProductos.getValueAt(i,2).toString();
+												float cantidadCompras=Float.parseFloat(valorCantidadCompras);
+												float cantidadProductos=Float.parseFloat(valorCantidadProductos);
+												existenciaDeCantidadEnTablaProductos=(cantidadProductos-cantidadCompras);
+												stmnt.executeUpdate("UPDATE  `"+Ruta.database+"`.`productos` SET  `CANTIDAD` =  '"+existenciaDeCantidadEnTablaProductos+"' WHERE  `productos`.`DESCRIPCION` ='"+valorDescripcionCompras+"';");
 												
-												//JTResultado1.setModel(ctm.getTablemodel());
-												//ctm.mostrardatos("");
 											}
 										}
 										
 										
 									} 
 										catch (SQLException e2) {
-										// TODO Auto-generated catch block
-                                                                                    e2.printStackTrace();
+											// TODO Auto-generated catch block
+	                                        e2.printStackTrace();
 										}							
 							}
-							
-							DefaultTableModel modelo = (DefaultTableModel) table2.getModel ();
-							for (int i = 0; i <table.getRowCount (); i ++) {
-								Object[] fila = new Object [table.getColumnCount ()]; 
-								for (int j = 0; j <table.getColumnCount (); j ++){
-										fila [j] = table.getValueAt (i, j);
-								} 
-						    	table2.setModel(table.getModel());
-						    }
-						    
 						    					
-									
-							try {
-								stmnt.executeUpdate("INSERT INTO `"+Ruta.database+"`.`facturas` (`Numero_ticket`, `Fecha`, `HORA`, `Pago`) VALUES (NULL, '"+anio+"-"+(mes+1)+"-"+dia+"', '"+hora+":"+minuto+":"+segundo+"', '"+total+"');");
-								
-								ConexionTableModel ctm=new ConexionTableModel("select * from facturas");
-								Facturas.TFacturas.setModel(ctm.getTablemodel());
-								
-							} catch (Exception e2) {
-								// TODO: handle exception
-								e2.printStackTrace();
-							}
 							/*----------------------JAFETH8: REGISTRAR HISTORIAL DE VENTAS-----------------*/
 							String fechaVenta=LocalDate.now().toString();
 							
@@ -542,11 +508,11 @@ public class PuntoDeVenta extends JFrame {
 							/*----------------------------------bloque para asociar cliente---------------------------------------------*/
 							
 						    /*---------------------------------fin de bloque para asociar cliente----------------------------------------------*/	
-							for (int i = 0; i < table.getRowCount(); i++) {
-								String idProducto=table.getValueAt(i,0).toString();
-								String precioUnitario=table.getValueAt(i,3).toString();
-								String cantidad=table.getValueAt(i, 1).toString();
-								String descuentoString=table.getValueAt(i, 5).toString();
+							for (int i = 0; i < tablaCompras.getRowCount(); i++) {
+								String idProducto=tablaCompras.getValueAt(i,0).toString();
+								String precioUnitario=tablaCompras.getValueAt(i,3).toString();
+								String cantidad=tablaCompras.getValueAt(i, 1).toString();
+								String descuentoString=tablaCompras.getValueAt(i, 5).toString();
 								
 								int idProductoInteger=Integer.parseInt(idProducto);
 								String categoriaProducto=operacion.obtenerCategoriaProducto(idProductoInteger);
@@ -568,7 +534,7 @@ public class PuntoDeVenta extends JFrame {
 							ConexionTableModel obj =new ConexionTableModel();
 							try {
 								//obj.mostrardatos("");
-								obj.mostrardatosProductos("",JTResultado1);
+								obj.mostrardatosProductos("",tablaProductos);
 							} catch (SQLException e3) {
 								// TODO Auto-generated catch block
 								e3.printStackTrace();
@@ -578,7 +544,7 @@ public class PuntoDeVenta extends JFrame {
 							 if (pre==0) {							
 									try {
 										MetodosImprimir instanciaImprimir= new MetodosImprimir();
-										instanciaImprimir.imprimir(pagar, table, TOTAL,Cambio, UsuarioLabel);
+										instanciaImprimir.imprimir(inputPagar, tablaCompras, TOTAL,Cambio, UsuarioLabel);
 										
 									} catch (Exception e1) {
 										// TODO Auto-generated catch block
@@ -592,9 +558,9 @@ public class PuntoDeVenta extends JFrame {
 							 
 							 try {
 									
-									ConexionTableModel ctm = new ConexionTableModel("TRUNCATE tcompras");
+								    operacion.truncarTablaTcompras("TRUNCATE "+Ruta.nametablaTcompras);
 									ConexionTableModel ctm1 =new ConexionTableModel("Select * from tcompras");
-									table.setModel(ctm1.getTablemodel());
+									tablaCompras.setModel(ctm1.getTablemodel());
 									ConexionTableModel ctm2=new ConexionTableModel("select CANTIDAD,DESCRIPCION from productos WHERE CANTIDAD='0'");
 									ProductosAgotados.ProductosAgotados.setModel(ctm2.getTablemodel());
 									
@@ -610,10 +576,10 @@ public class PuntoDeVenta extends JFrame {
 			}
 		});
 			
-		button.setToolTipText("PAGAR EL TOTAL");
+		botonPagar.setToolTipText("PAGAR EL TOTAL");
 		
-		button.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\boton-pagar.jpg"));
-		getContentPane().add(button);
+		botonPagar.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\boton-pagar.jpg"));
+		getContentPane().add(botonPagar);
 		
 		btnNewButton.setBounds(27, 316, 190, 52);
 		btnNewButton.addActionListener(new ActionListener() {
@@ -656,7 +622,7 @@ public class PuntoDeVenta extends JFrame {
 					int pre=JOptionPane.showConfirmDialog(null, "DESEA IMPRIMIR LA COTIZACION ?","",JOptionPane.YES_NO_OPTION);
 					 if (pre==0) {							
 						try {
-							instanciaImprimir.imprimirCotizacion(table,TOTAL,UsuarioLabel);
+							instanciaImprimir.imprimirCotizacion(tablaCompras,TOTAL,UsuarioLabel);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -683,7 +649,7 @@ public class PuntoDeVenta extends JFrame {
 		btnActualizar.setBounds(1014, 79, 256, 52);
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				final int flsel=JTResultado1.getSelectedRow();
+				final int flsel=tablaProductos.getSelectedRow();
 				SqlOperaciones instancia=new SqlOperaciones();
 				
 				String categoria="";
@@ -691,13 +657,13 @@ public class PuntoDeVenta extends JFrame {
 				if (flsel==-1) {
 					JOptionPane.showMessageDialog(null,"DEBE SELECCIONAR UN PRODUCTO","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 				}else{
-					int idProducto= Integer.parseInt(JTResultado1.getValueAt(flsel, 0).toString().toString());
+					int idProducto= Integer.parseInt(tablaProductos.getValueAt(flsel, 0).toString().toString());
 					Actualizar.actualizar.setVisible(true);
-					codigo = JTResultado1.getValueAt(flsel, 1).toString();
-					cantidad=JTResultado1.getValueAt(flsel, 2).toString();
-					descripcion = JTResultado1.getValueAt(flsel, 3).toString();
-					precio=JTResultado1.getValueAt(flsel, 4).toString();
-					preciocosto=JTResultado1.getValueAt(flsel, 5).toString();
+					codigo = tablaProductos.getValueAt(flsel, 1).toString();
+					cantidad=tablaProductos.getValueAt(flsel, 2).toString();
+					descripcion = tablaProductos.getValueAt(flsel, 3).toString();
+					precio=tablaProductos.getValueAt(flsel, 4).toString();
+					preciocosto=tablaProductos.getValueAt(flsel, 5).toString();
 					categoria=instancia.obtenerCategoriaProducto(idProducto);
 					cantidadProductos=instancia.obtenerCantidadProductoDescripcion(descripcion);
 					Actualizar.BARRA.setText(""+codigo);
@@ -720,21 +686,21 @@ public class PuntoDeVenta extends JFrame {
 		btnCancelarProducto.setBounds(1014, 316, 256, 50);
 		btnCancelarProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-             final int seleccionado=table.getSelectedRow();
+             final int seleccionado=tablaCompras.getSelectedRow();
              SqlOperaciones operacion=new SqlOperaciones(); 	
 				if (seleccionado==-1) {
 					JOptionPane.showMessageDialog(null,"NO SELECCIONO PRODUCTO","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 				}else{
 					total = (float) operacion.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
-					String descripcionProducto=table.getValueAt(seleccionado, 2).toString();
-					String subtotaltabla=table.getValueAt(seleccionado, 4).toString();
+					String descripcionProducto=tablaCompras.getValueAt(seleccionado, 2).toString();
+					String subtotaltabla=tablaCompras.getValueAt(seleccionado, 4).toString();
 					float calcula2 = Float.parseFloat(subtotaltabla);
 					total=total-calcula2;
 					TOTAL.setText(""+total);
 					operacion.eliminarRegistroTablaTcompras(descripcionProducto,Ruta.nametablaTcompras);
 					ConexionTableModel ctm=new ConexionTableModel();
 					try {
-						ctm.datosTablaTcompras("", table,Ruta.nametablaTcompras);
+						ctm.datosTablaTcompras("", tablaCompras,Ruta.nametablaTcompras);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -1061,7 +1027,7 @@ public class PuntoDeVenta extends JFrame {
 				try {
 					ConexionTableModel ctm = new ConexionTableModel("TRUNCATE tcompras");
 					ConexionTableModel ctm1 =new ConexionTableModel("Select * from tcompras");
-					table.setModel(ctm1.getTablemodel());
+					tablaCompras.setModel(ctm1.getTablemodel());
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -1069,7 +1035,7 @@ public class PuntoDeVenta extends JFrame {
 				ConexionTableModel ctm;
 				try {
 					ctm = new ConexionTableModel(Ruta.query);
-					JTResultado1.setModel(ctm.getTablemodel());
+					tablaProductos.setModel(ctm.getTablemodel());
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					
