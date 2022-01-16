@@ -161,8 +161,6 @@ public class PuntoDeVenta extends JFrame {
 				}
 			}
 		});
-		int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
-	    int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\ordenador-icono-8301-96.png"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -216,12 +214,12 @@ public class PuntoDeVenta extends JFrame {
 		table = new JTable();
 		try {
 			SqlOperaciones operacion=new SqlOperaciones();
-			//ConexionTableModel ctm = new ConexionTableModel("TRUNCATE tcompras");
+			
 			operacion.truncarTablaTcompras("TRUNCATE tcompras");/*---------------Query para que la tabla no quede con productos al iniciar el programa*/
-			//ConexionTableModel ctm1 =new ConexionTableModel("Select * from tcompras");
+			
 			ConexionTableModel ctm1 =new ConexionTableModel();
 			ctm1.mostrarDatosTablaTcompras("");
-			//table.setModel(ctm1.getTablemodel());
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
