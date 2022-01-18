@@ -24,6 +24,8 @@ public class SqlOperaciones {
 	        PreparedStatement pst = cn.prepareStatement(querySql);
 	        pst.executeUpdate();
 	    } catch (Exception e) {
+	    	System.err.println(e);
+	    	e.printStackTrace();
 	    }
 	}
     
@@ -192,8 +194,8 @@ public class SqlOperaciones {
 		}
     }
     
-    public void actualizarCantidadProductos(int idProducto,double CantidadTablaProductos,double  cantidadDeApartados) {
-    	double cantidadRestante=CantidadTablaProductos-cantidadDeApartados;
+    public void actualizarCantidadProductos(int idProducto,float cantidadTablaProductos,float  cantidad_a_restar) {
+    	float cantidadRestante=cantidadTablaProductos-cantidad_a_restar;
     	PreparedStatement pst;
 		try {
 			pst = cn.prepareStatement("UPDATE productos SET cantidad='"+cantidadRestante+"' WHERE ID='"+idProducto+"'");
@@ -205,17 +207,17 @@ public class SqlOperaciones {
         
     }
     
-    public double obtenerCantidadTablaProducto(int idProducto) {  
+    public float obtenerCantidadTablaProducto(int idProducto) {  
 		    	 
     	String sql="SELECT CANTIDAD FROM productos WHERE ID = '"+idProducto+"'";
-		double cantidad=0;    	 
+		float cantidad=0;    	 
 		    
         try {
             Statement st = cn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while(rs.next()){
             	
-                cantidad=rs.getDouble(1);
+                cantidad=rs.getFloat(1);
               
             }
            
@@ -473,51 +475,6 @@ public class SqlOperaciones {
 			pst = cn.prepareStatement("UPDATE ventas SET fk_id_cliente='"+idCliente+"' WHERE id_venta='"+idVenta+"'");
 			pst.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void actualizarComisionTablaVentas(int idVenta,double comision) {
-		PreparedStatement pst;
-		try {
-			pst = cn.prepareStatement("UPDATE ventas SET comision='"+comision+"' WHERE id_venta='"+idVenta+"'");
-			pst.executeUpdate();
-		}catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	public int obtenerPorcentajeComision() {
-
-		// SELECT valor FROM cporcentaje_comision
-		String sql = "SELECT valor FROM cporcentaje_comision";
-
-		int valor =1;
-
-		try {
-			Statement st = cn.createStatement();
-			ResultSet rs = st.executeQuery(sql);
-			while (rs.next()) {
-
-				valor = rs.getInt(1);
-
-			}
-
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		} finally {
-			// Aqui no se cierra la conexion para permitir mas operaciones
-		}
-		return valor;
-	}
-	
-	public  void ActualizarPorcentajeComision(int porcentaje) {
-		PreparedStatement pst;
-		try {
-			pst = cn.prepareStatement("UPDATE cporcentaje_comision SET valor='"+porcentaje+"' WHERE id_porcentaje='1'");
-			pst.executeUpdate();
-		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
