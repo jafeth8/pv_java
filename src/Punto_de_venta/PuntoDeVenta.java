@@ -240,14 +240,9 @@ public class PuntoDeVenta extends JFrame {
 	
 		tablaProductos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
-		try {
-			ConexionTableModel ctm = new ConexionTableModel();
-			//ctm.mostrardatos("");
-			ctm.mostrardatosProductos("", tablaProductos);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ConexionTableModel conexionTableModel = new ConexionTableModel();
+		
+		conexionTableModel.mostrardatosProductos("", tablaProductos); //al inicializarse la tablaProductos, se le rellena con sus respectivos datos
 		
 		btnAgregar.setBounds(27, 79, 193, 52);
 		btnAgregar.setToolTipText("Agrega Productos ");
@@ -310,7 +305,7 @@ public class PuntoDeVenta extends JFrame {
 							
 							operacion.insertDetalleApartados(idApartado, idProductoInteger, costo_unitario, precioUnitarioDouble, cantidadDouble,fechaApartado,descuento);
 							//int cantidadTablaProducto=operacion.obtenerCantidadTablaProducto(idProductoInteger);
-							double cantidadTablaProducto=operacion.obtenerCantidadTablaProducto(idProductoInteger);
+							float cantidadTablaProducto=operacion.obtenerCantidadTablaProducto(idProductoInteger);
 							
 							operacion.actualizarCantidadProductos(idProductoInteger, cantidadTablaProducto, cantidadDouble);
 							
@@ -349,26 +344,13 @@ public class PuntoDeVenta extends JFrame {
 						
 					}//fin del segundo else
 					
-					
 				}//fin del primer else
 				
 				setClienteId=0;
 				NombreClienteApartados="";
-				//total=0;
-				
-			 
-				 //TOTAL.setText(" $ 0.0");
-				 //Cambio.setText(" $ 0.0");
-				
-				
-				try {
-					//obj.mostrardatos("");
-					obj.mostrardatosProductos("",tablaProductos);
-					obj.datosTablaTcompras("", tablaCompras, Ruta.nametablaTcompras);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				obj.mostrardatosProductos("",tablaProductos);
+				obj.datosTablaTcompras("", tablaCompras, Ruta.nametablaTcompras);
 
 			}//llaveActionPerformand
 		});
@@ -390,13 +372,7 @@ public class PuntoDeVenta extends JFrame {
 					if(opcion==0) {
 						instancia.actualizarStateTablaProductos(idProducto, 3); // 3 es eliminado en la tabla sstate
 						JOptionPane.showMessageDialog(null, "producto eliminado satisfactoriamente");
-						try {
-							//instancia2.mostrardatos("");
-							instancia2.mostrardatosProductos("", tablaProductos);
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						instancia2.mostrardatosProductos("", tablaProductos);
 						
 					}
 
@@ -439,12 +415,11 @@ public class PuntoDeVenta extends JFrame {
 		botonPagar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				Metodos instancia=new Metodos();
 				float total;
 				float pagoIngresado;
 		        
 		        SqlOperaciones operacion =new SqlOperaciones();
-		        total=(float) operacion.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
+		        total= operacion.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
 		        String inputPagar;
 		        System.out.println("total compras--- "+total);
 				if(total==0)
@@ -460,54 +435,38 @@ public class PuntoDeVenta extends JFrame {
 				{
 						double cambioDelCliente;
 						cambioDelCliente=pagoIngresado-total;
+						int idProductoCompras;
 						String valorCantidadCompras;
 						String valorDescripcionCompras;			
 						String descripcionProductos;
 						String valorCantidadProductos = null;
-						float existenciaDeCantidadEnTablaProductos;
 							
 							for (int j = 0; j < tablaCompras.getRowCount(); j++) {
-							
+								
+								idProductoCompras = Integer.parseInt(tablaCompras.getValueAt(j,0).toString());
 								valorCantidadCompras=tablaCompras.getValueAt(j, 1).toString();
 								valorDescripcionCompras=tablaCompras.getValueAt(j,2).toString();
 								
-									try {
-										
-										ConexionTableModel ctm=new ConexionTableModel();
-										ctm.mostrardatosProductos("",tablaProductos);//se deben mostrar todos los productos para comparar las descripciones entre las dos tablas (importante no omitir este metodo)
-										for (int i = 0; i < tablaProductos.getRowCount(); i++) {
-											descripcionProductos=tablaProductos.getValueAt(i,3).toString();
-											if (valorDescripcionCompras.equals(descripcionProductos)) {
-												valorCantidadProductos=tablaProductos.getValueAt(i,2).toString();
-												float cantidadCompras=Float.parseFloat(valorCantidadCompras);
-												float cantidadProductos=Float.parseFloat(valorCantidadProductos);
-												existenciaDeCantidadEnTablaProductos=(cantidadProductos-cantidadCompras);
-												stmnt.executeUpdate("UPDATE  `"+Ruta.database+"`.`productos` SET  `CANTIDAD` =  '"+existenciaDeCantidadEnTablaProductos+"' WHERE  `productos`.`DESCRIPCION` ='"+valorDescripcionCompras+"';");
-												
-											}
+								
+									ConexionTableModel ctm=new ConexionTableModel();
+									ctm.mostrardatosProductos("",tablaProductos);//se deben mostrar todos los productos para comparar las descripciones entre las dos tablas (importante no omitir este metodo)
+									for (int i = 0; i < tablaProductos.getRowCount(); i++) {
+										descripcionProductos=tablaProductos.getValueAt(i,3).toString();
+										if (valorDescripcionCompras.equals(descripcionProductos)) {
+											valorCantidadProductos=tablaProductos.getValueAt(i,2).toString();
+											float cantidadCompras=Float.parseFloat(valorCantidadCompras);
+											float cantidadProductos=Float.parseFloat(valorCantidadProductos);
+											operacion.actualizarCantidadProductos(idProductoCompras, cantidadProductos, cantidadCompras);//se establece la existencia de cantidad en el producto
 										}
-										
-										
-									} 
-										catch (SQLException e2) {
-											// TODO Auto-generated catch block
-	                                        e2.printStackTrace();
-										}							
+									}							
 							}
 						    					
-							/*----------------------JAFETH8: REGISTRAR HISTORIAL DE VENTAS-----------------*/
+							/*----------------------: REGISTRAR HISTORIAL DE VENTAS-----------------*/
 							String fechaVenta=LocalDate.now().toString();
-							
-							//ca=pago del cliente
-							//totalApagar=cambio del cliente
-							
-							
 							
 							operacion.insertVentas(total,fechaVenta,ca,cambioDelCliente ,"al contado");
 							int idVenta=operacion.obtenerIdTablaVentas();
-							/*----------------------------------bloque para asociar cliente---------------------------------------------*/
 							
-						    /*---------------------------------fin de bloque para asociar cliente----------------------------------------------*/	
 							for (int i = 0; i < tablaCompras.getRowCount(); i++) {
 								String idProducto=tablaCompras.getValueAt(i,0).toString();
 								String precioUnitario=tablaCompras.getValueAt(i,3).toString();
@@ -518,7 +477,7 @@ public class PuntoDeVenta extends JFrame {
 								String categoriaProducto=operacion.obtenerCategoriaProducto(idProductoInteger);
 								double costo_unitario=operacion.obtenerCostoProductoTablaProducto(idProductoInteger);
 								double precioUnitarioDouble=Double.parseDouble(precioUnitario);
-								//int cantidadInteger=Integer.parseInt(cantidad);
+								
 								float cantidadFloat=Float.parseFloat(cantidad);
 								double descuento=Double.parseDouble(descuentoString);
 
@@ -530,27 +489,15 @@ public class PuntoDeVenta extends JFrame {
 							Cambio.setText("$ "+cambioDelCliente+"");
 							
 							total=0;
-							setClienteId=0;
+							
 							ConexionTableModel obj =new ConexionTableModel();
-							try {
-								//obj.mostrardatos("");
-								obj.mostrardatosProductos("",tablaProductos);
-							} catch (SQLException e3) {
-								// TODO Auto-generated catch block
-								e3.printStackTrace();
-							}
+							
+							obj.mostrardatosProductos("",tablaProductos);
 													
 							int pre=JOptionPane.showConfirmDialog(null, "DESEA IMPRIMIR TICKET ?","",JOptionPane.YES_NO_OPTION);
 							 if (pre==0) {							
-									try {
-										MetodosImprimir instanciaImprimir= new MetodosImprimir();
-										instanciaImprimir.imprimir(inputPagar, tablaCompras, TOTAL,Cambio, UsuarioLabel);
-										
-									} catch (Exception e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
-										JOptionPane.showInternalMessageDialog(null," "+e1.getMessage());
-									}
+								MetodosImprimir instanciaImprimir= new MetodosImprimir();
+								instanciaImprimir.imprimir(inputPagar, tablaCompras, TOTAL,Cambio, UsuarioLabel);
 							 }
 							 else{
 								 JOptionPane.showMessageDialog(null, "GRACIAS POR SU COMPRA"); 
@@ -564,9 +511,8 @@ public class PuntoDeVenta extends JFrame {
 									ConexionTableModel ctm2=new ConexionTableModel("select CANTIDAD,DESCRIPCION from productos WHERE CANTIDAD='0'");
 									ProductosAgotados.ProductosAgotados.setModel(ctm2.getTablemodel());
 									
-									
 								} catch (SQLException e2) {
-									System.err.println(e2);
+									e2.printStackTrace();
 								}
 							 
 							 TOTAL.setText(" $ 0.0");
@@ -699,12 +645,7 @@ public class PuntoDeVenta extends JFrame {
 					TOTAL.setText(""+total);
 					operacion.eliminarRegistroTablaTcompras(descripcionProducto,Ruta.nametablaTcompras);
 					ConexionTableModel ctm=new ConexionTableModel();
-					try {
-						ctm.datosTablaTcompras("", tablaCompras,Ruta.nametablaTcompras);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					ctm.datosTablaTcompras("", tablaCompras,Ruta.nametablaTcompras);
 				}
 			}
 		});
