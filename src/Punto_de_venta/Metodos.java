@@ -363,12 +363,7 @@ public class Metodos {
 		    /*-----------------------------------JAFETH8---------------------------------------*/
 			}//FIN DEL IF CODIGO DE BARRAS
 			else if (MetodoBusqueda.equals("DESCRIPCION")) {
-				try {
-					ctm.mostrardatosProductos(buscador.getText(), tablaProductos);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				ctm.mostrardatosProductos(buscador.getText(), tablaProductos);
 				if(instanciaSqlOperaciones.busquedaDescripcion(buscador.getText())==false) {
 					JOptionPane.showMessageDialog(null,"El valor no coincide con ningun tipo busqueda");
 				}

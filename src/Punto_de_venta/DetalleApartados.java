@@ -205,13 +205,7 @@ public class DetalleApartados extends JDialog {
 							mostrarApartado(DetalleApartados.idApartado);
 							mostrarDetalleApartado(DetalleApartados.idApartado);
 							ConexionTableModel conexion = new ConexionTableModel();
-							try {
-								conexion.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							
+							conexion.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 							VerApartados.dialog.mostrarApartados("");
 							
 						}else {
@@ -252,25 +246,12 @@ public class DetalleApartados extends JDialog {
 						double cantidadTablaProductos=operacion.obtenerCantidadTablaProducto(idProducto);
 						operacion.actualizarCantidadProductosApartados(idProducto, cantidadTablaProductos, cantidad);
 						
-						/*
-						System.out.println("id producto: "+idProducto);
-						System.out.println("cantidad total del producto:"+ operacion.obtenerCantidadTablaProducto(idProducto));
-						System.out.println("cantidad producto apartado: " +cantidad);
-						*/
-						
 					}
 					operacion.eliminarRegistroApartado(idApartado);
 					JOptionPane.showMessageDialog(null,"El apartado ha sido eliminado correctamente");
 					VerApartados.dialog.mostrarApartados("");
 					dispose();
-					
-					
-					try {
-						instancia.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					instancia.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 				}
 			}
 		});

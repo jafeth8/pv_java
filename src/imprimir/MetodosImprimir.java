@@ -20,12 +20,13 @@ import br.com.adilson.util.Extenso;
 import br.com.adilson.util.PrinterMatrix;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 
 public class MetodosImprimir {
 	
-	public void imprimir(String pagar,JTable tablaCompras,JLabel TOTAL,JLabel Cambio,JLabel UsuarioLabel) throws IOException
+	public void imprimir(String pagar,JTable tablaCompras,JLabel TOTAL,JLabel Cambio,JLabel UsuarioLabel)
 	{
 		
 		Calendar fecha = new GregorianCalendar();
@@ -134,7 +135,8 @@ public class MetodosImprimir {
 		        }
 		        //inputStream.close();
 		} catch (Exception e2) {
-			// TODO: handle exception
+			e2.printStackTrace();
+			JOptionPane.showInternalMessageDialog(null," "+e2.getMessage());
 		}
 		
 	}
@@ -242,6 +244,8 @@ public class MetodosImprimir {
 				
 		} catch (Exception e2) {
 			// TODO: handle exception
+			e2.printStackTrace();
+			JOptionPane.showInternalMessageDialog(null," "+e2.getMessage());
 		}
 	}
 	
@@ -354,6 +358,8 @@ public class MetodosImprimir {
 			
 		} catch (Exception e2) {
 			// TODO: handle exception
+			e2.printStackTrace();
+			JOptionPane.showInternalMessageDialog(null," "+e2.getMessage());
 		}
 		
 	}

@@ -21,9 +21,6 @@ import javax.swing.table.TableColumn;
 
 public class ConexionTableModel {
 	
-	
-	
-	/*----------------------------------jafeth8----------------------------------------------*/
 	public ConexionTableModel(){
 		
 	}
@@ -31,7 +28,7 @@ public class ConexionTableModel {
 	
 	Conectar cc= new Conectar();
     Connection cn= cc.conexion();
-	  public void mostrardatosProductos(String valor,JTable tablaProductos) throws SQLException{
+	  public void mostrardatosProductos(String valor,JTable tablaProductos){
 		    DefaultTableModel modelo= new DefaultTableModel() {
 		    	@Override
 		    	public boolean isCellEditable(int row, int column) {
@@ -85,8 +82,9 @@ public class ConexionTableModel {
 		                modelo.addRow(datos);
 		            }
 		            tablaProductos.setModel(modelo);
-		        } catch (SQLException ex) {
-		            ex.printStackTrace();
+		        } catch (SQLException e) {
+		        	System.err.println(e);
+		            e.printStackTrace();
 		        }finally {
 		        	
 					
@@ -311,7 +309,7 @@ public class ConexionTableModel {
 	  
 	  
 	  
-	  public void datosTablaTcompras(String valor,JTable table,String nameTablaTcompras) throws SQLException{
+	  public void datosTablaTcompras(String valor,JTable table,String nameTablaTcompras){
 		    DefaultTableModel modelo= new DefaultTableModel() {
 		    	@Override
 		    	public boolean isCellEditable(int row, int column) {
@@ -508,8 +506,6 @@ public class ConexionTableModel {
 		columnaCategoria.setMaxWidth(145);
 		
  }
-	
-//select CODIGO_BARRA,CANTIDAD,DESCRIPCION,PRECIO_UNITARIO from productos	
 }
 	
 	
