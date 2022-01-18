@@ -163,12 +163,7 @@ public class ProductosParaAniadir extends JDialog {
 					operacion.eliminarRegistroTablaTcompras(descripcionProducto,Ruta.nametablaTcomprasAdditions);
 					//mostrarProductosTcompras("");
 					ConexionTableModel ctm=new ConexionTableModel();
-					try {
-						ctm.datosTablaTcompras("", tablaProductosAgregados,Ruta.nametablaTcomprasAdditions);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					ctm.datosTablaTcompras("", tablaProductosAgregados,Ruta.nametablaTcomprasAdditions);
 				}else {
 					JOptionPane.showMessageDialog(null,"no selecciono un producto");
 				}
@@ -204,7 +199,7 @@ public class ProductosParaAniadir extends JDialog {
 					
 					for (int i = 0; i <filas; i++) {
 						int idProducto=Integer.parseInt(tablaProductosAgregados.getValueAt(i,0).toString());
-						double cantidad=Double.parseDouble(tablaProductosAgregados.getValueAt(i,1).toString());
+						float cantidad=Float.parseFloat(tablaProductosAgregados.getValueAt(i,1).toString());
 						String descripcion=tablaProductosAgregados.getValueAt(i,2).toString();
 						double precioUnitario=Double.parseDouble(tablaProductosAgregados.getValueAt(i, 3).toString());
 						double costoUnitario=operacion.obtenerCostoProductoTablaProducto(idProducto);
@@ -212,7 +207,7 @@ public class ProductosParaAniadir extends JDialog {
 						operacion.insertDetalleApartados(idApartado,idProducto, costoUnitario, precioUnitario, cantidad,fechaRegistroDetalleApartado,descuento);
 						
 						
-						double cantidadTablaProducto=operacion.obtenerCantidadTablaProducto(idProducto);
+						float cantidadTablaProducto=operacion.obtenerCantidadTablaProducto(idProducto);
 						operacion.actualizarCantidadProductos(idProducto, cantidadTablaProducto, cantidad);
 					}
 					
@@ -275,24 +270,8 @@ public class ProductosParaAniadir extends JDialog {
 		labelTotal.setBounds(803, 474, 71, 14);
 		getContentPane().add(labelTotal);
 		
-		
-		
-		try {
-			ctm.mostrardatosProductos("",tablaProductos);
-		} catch (SQLException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		try {
-			ctm.datosTablaTcompras("", tablaProductosAgregados,Ruta.nametablaTcomprasAdditions);
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		ctm.mostrardatosProductos("",tablaProductos);
+		ctm.datosTablaTcompras("", tablaProductosAgregados,Ruta.nametablaTcomprasAdditions);
 	}
 	
-	
-	
-	
-	//------------------------------------------------------------------------------------------------------------------------------
 }
