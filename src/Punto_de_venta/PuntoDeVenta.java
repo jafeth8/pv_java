@@ -58,11 +58,10 @@ public class PuntoDeVenta extends JFrame {
 	
 	private JPanel getcontentPane;
 	Statement stmnt=null;
+	
 	static JLabel TOTAL = new JLabel(" $     0.0");
-	
-	
 	public static JTable tablaProductos;
-	static double ca;
+	
 	static JButton Cotizar = new JButton("COTIZAR");
 	static int cantidadProductosIngresada;
 	static Eliminar dialog1 = new Eliminar();
@@ -260,18 +259,16 @@ public class PuntoDeVenta extends JFrame {
 		btnApartar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SqlOperaciones instanciaSqlOperaciones =new SqlOperaciones();
-				ConexionTableModel obj=new ConexionTableModel();
+				ConexionTableModel modeloTabla=new ConexionTableModel();
 				MetodosImprimir instanciaImprimir=new MetodosImprimir();
+				float total=0;
 				/*---VARIABLES: PARA INSERTAR EN TABLA APARTADOS*/
-				int idCliente;
-				int id_producto;// perfectamente se podria utilizar (setClienteId) la variable estatica de la clase, pero para no revolver variables la dejo XD
-				int cantidadIngresada;
+				int idCliente;// perfectamente se podria utilizar (setClienteId) la variable estatica de la clase, pero para no revolver variables la dejo XD
 				/*---FIN DE VARIABLES:PARA INSERTAR EN TABLA APARTADOS */
 				total=(float) instanciaSqlOperaciones.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
 				
 				if(total==0) {
 					JOptionPane.showMessageDialog(null,"Primero debes agregar productos al carrito");
-					
 				}
 				else {
 					
@@ -309,36 +306,22 @@ public class PuntoDeVenta extends JFrame {
 							
 							operacion.actualizarCantidadProductos(idProductoInteger, cantidadTablaProducto, cantidadDouble);
 							
-							
-							
-							
 						}//fin del ciclo for
-						JOptionPane.showMessageDialog(null, "operacion realizada correctamente");
 						
+						JOptionPane.showMessageDialog(null, "operacion realizada correctamente");
 						int opcion;
 						opcion=JOptionPane.showConfirmDialog(null,"desea imprimir el apartado?","" ,JOptionPane.YES_NO_OPTION);
-						try {
-							
-							if(opcion==0) {
-								for (int i = 0; i <2; i++) {
-									JOptionPane.showMessageDialog(null,"Apartado realizado correctamente");
-									//la variable NombreClienteApartados es inicializada por la clase o ventana 'MostrarClientes'
-									instanciaImprimir.imprimirApartado(tablaCompras, TOTAL, UsuarioLabel,NombreClienteApartados);
-								}
-							}else {
-								JOptionPane.showMessageDialog(null,"Apartado realizado correctamente");
+						if(opcion==0) {
+							JOptionPane.showMessageDialog(null,"Apartado realizado correctamente");
+							for (int i = 0; i <2; i++) {
+								//la variable NombreClienteApartados es inicializada por la clase o ventana 'MostrarClientes'
+								instanciaImprimir.imprimirApartado(tablaCompras, TOTAL, UsuarioLabel,NombreClienteApartados);
 							}
-							
-							
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							JOptionPane.showMessageDialog(null,"error al imprimir ticket");
+						}else {
+							JOptionPane.showMessageDialog(null,"Apartado realizado correctamente");
 						}
 						
 						operacion.truncarTablaTcompras("TRUNCATE "+Ruta.nametablaTcompras+"");
-						
-						total=0;
 						TOTAL.setText(" $ 0.0");
 						Cambio.setText(" $ 0.0");
 						
@@ -349,8 +332,8 @@ public class PuntoDeVenta extends JFrame {
 				setClienteId=0;
 				NombreClienteApartados="";
 
-				obj.mostrardatosProductos("",tablaProductos);
-				obj.datosTablaTcompras("", tablaCompras, Ruta.nametablaTcompras);
+				modeloTabla.mostrardatosProductos("",tablaProductos);
+				modeloTabla.datosTablaTcompras("", tablaCompras, Ruta.nametablaTcompras);
 
 			}//llaveActionPerformand
 		});
@@ -363,8 +346,7 @@ public class PuntoDeVenta extends JFrame {
 				final int flsel = tablaProductos.getSelectedRow();
 				int idProducto = Integer.parseInt(tablaProductos.getValueAt(flsel, 0).toString());
 				if (flsel == -1) {
-					JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR UN PRODUCTO", "Mensaje de Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR UN PRODUCTO", "Mensaje de Error",JOptionPane.ERROR_MESSAGE);
 				} else {
 
 					int opcion=JOptionPane.showConfirmDialog(null,"Esta seguro de eliminar este producto","Advertencia",JOptionPane.YES_NO_OPTION);
@@ -373,10 +355,7 @@ public class PuntoDeVenta extends JFrame {
 						instancia.actualizarStateTablaProductos(idProducto, 3); // 3 es eliminado en la tabla sstate
 						JOptionPane.showMessageDialog(null, "producto eliminado satisfactoriamente");
 						instancia2.mostrardatosProductos("", tablaProductos);
-						
-					}
-
-					
+					}	
 				}
 			}
 		});
@@ -464,7 +443,7 @@ public class PuntoDeVenta extends JFrame {
 					/*----------------------: REGISTRAR HISTORIAL DE VENTAS-----------------*/
 					String fechaVenta=LocalDate.now().toString();
 					
-					operacion.insertVentas(total,fechaVenta,ca,cambioDelCliente ,"al contado");
+					operacion.insertVentas(total,fechaVenta,pagoIngresado,cambioDelCliente ,"al contado");
 					int idVenta=operacion.obtenerIdTablaVentas();
 					
 					for (int i = 0; i < tablaCompras.getRowCount(); i++) {
@@ -541,30 +520,25 @@ public class PuntoDeVenta extends JFrame {
 		getContentPane().add(Cotizar);
 		
 		Cotizar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SqlOperaciones instanciaSqlOperaciones=new SqlOperaciones();
-				MetodosImprimir instanciaImprimir=new MetodosImprimir();
-				total=(float) instanciaSqlOperaciones.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
-				if(total==0)
-				{
-					JOptionPane.showMessageDialog(null,"DEBES GENERAR UNA VENTA PARA COTIZAR","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
-				}else {
-					int pre=JOptionPane.showConfirmDialog(null, "DESEA IMPRIMIR LA COTIZACION ?","",JOptionPane.YES_NO_OPTION);
-					 if (pre==0) {							
-						try {
-							instanciaImprimir.imprimirCotizacion(tablaCompras,TOTAL,UsuarioLabel);
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					 }
-					 else{
-						 JOptionPane.showMessageDialog(null, "Cancelado","Mensaje de aviso",JOptionPane.CANCEL_OPTION);
-					 }
-				}
+				SqlOperaciones instanciaSqlOperaciones = new SqlOperaciones();
+				MetodosImprimir instanciaImprimir = new MetodosImprimir();
+				float total=0;
+				total = instanciaSqlOperaciones.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
 				
+				if (total == 0) {
+					JOptionPane.showMessageDialog(null, "DEBES GENERAR UNA VENTA PARA COTIZAR", "Mensaje de Error",JOptionPane.ERROR_MESSAGE);
+				} else {
+					int pre = JOptionPane.showConfirmDialog(null, "DESEA IMPRIMIR LA COTIZACION ?", "",JOptionPane.YES_NO_OPTION);
+					if (pre == 0) {
+						instanciaImprimir.imprimirCotizacion(tablaCompras, TOTAL, UsuarioLabel);
+					} else {
+						JOptionPane.showMessageDialog(null, "Cancelado", "Mensaje de aviso", JOptionPane.CANCEL_OPTION);
+					}
+				}
+
 			}
 		});
 		
@@ -618,16 +592,17 @@ public class PuntoDeVenta extends JFrame {
 		btnCancelarProducto.setBounds(1014, 316, 256, 50);
 		btnCancelarProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-             final int seleccionado=tablaCompras.getSelectedRow();
-             SqlOperaciones operacion=new SqlOperaciones(); 	
+				final int seleccionado=tablaCompras.getSelectedRow();
+				SqlOperaciones operacion=new SqlOperaciones(); 	
 				if (seleccionado==-1) {
 					JOptionPane.showMessageDialog(null,"NO SELECCIONO PRODUCTO","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 				}else{
+					float total=0;
 					total = (float) operacion.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
 					String descripcionProducto=tablaCompras.getValueAt(seleccionado, 2).toString();
 					String subtotaltabla=tablaCompras.getValueAt(seleccionado, 4).toString();
-					float calcula2 = Float.parseFloat(subtotaltabla);
-					total=total-calcula2;
+					float subTotal = Float.parseFloat(subtotaltabla);
+					total=total-subTotal;
 					TOTAL.setText(""+total);
 					operacion.eliminarRegistroTablaTcompras(descripcionProducto,Ruta.nametablaTcompras);
 					ConexionTableModel ctm=new ConexionTableModel();

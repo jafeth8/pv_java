@@ -536,7 +536,7 @@ public class Metodos {
 	    					    
 				          }
 			labelTotal.setText("$ "+total);
-			System.out.println(total);
+			
 			}
 			}
 			

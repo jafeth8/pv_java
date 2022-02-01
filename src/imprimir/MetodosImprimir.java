@@ -142,7 +142,7 @@ public class MetodosImprimir {
 	}
 	
 	
-	public void imprimirCotizacion(JTable tablaCompras,JLabel TOTAL,JLabel UsuarioLabel) throws IOException
+	public void imprimirCotizacion(JTable tablaCompras,JLabel TOTAL,JLabel UsuarioLabel)
 	{
 		Calendar fecha = new GregorianCalendar();
 		int anio = fecha.get(Calendar.YEAR);
@@ -210,7 +210,7 @@ public class MetodosImprimir {
 
 		       printer.toFile("impresion.txt");
 		       
-		      FileInputStream inputStream = null;
+		       FileInputStream inputStream = null;
 		        try {
 		            inputStream = new FileInputStream("impresion.txt");
 		        } catch (FileNotFoundException ex) {
@@ -250,7 +250,7 @@ public class MetodosImprimir {
 	}
 	
 	
-	public void imprimirApartado(JTable tablaCompras,JLabel TOTAL,JLabel UsuarioLabel,String NombreClienteApartados) throws IOException
+	public void imprimirApartado(JTable tablaCompras,JLabel TOTAL,JLabel UsuarioLabel,String NombreClienteApartados)
 	{
 		Calendar fecha = new GregorianCalendar();
 		int anio = fecha.get(Calendar.YEAR);
