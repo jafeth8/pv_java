@@ -233,8 +233,7 @@ public class SqlOperaciones {
     public String obtenerCantidadProductoDescripcion(String descripcion) {  
    	 
     	String sql="SELECT CANTIDAD,CATEGORIA FROM productos WHERE DESCRIPCION = '"+descripcion+"'";
-		String cantidad="";    	 
-		String categoria="";    
+		String cantidad="";    	  
         try {
             Statement st = cn.createStatement();
             ResultSet rs = st.executeQuery(sql);

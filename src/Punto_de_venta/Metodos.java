@@ -381,6 +381,7 @@ public class Metodos {
 				JOptionPane.showMessageDialog(null,"el valor no coincide con ningun tipo busqueda");
 				
 			}
+			
 		}
 	}
 	
