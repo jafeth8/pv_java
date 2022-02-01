@@ -388,7 +388,7 @@ public class PuntoDeVenta extends JFrame {
 		
 		AgregarCarrito.setBounds(371, 319, 222, 47);
 		AgregarCarrito.addActionListener(new ActionListener() {
-			ConexionTableModel ctm=new ConexionTableModel();
+			
 			public void actionPerformed(ActionEvent arg0) {
 				Metodos instanciaMetodos= new Metodos();
 				try {
@@ -419,104 +419,90 @@ public class PuntoDeVenta extends JFrame {
 				float pagoIngresado;
 		        
 		        SqlOperaciones operacion =new SqlOperaciones();
+		        ConexionTableModel modeloTabla=new ConexionTableModel();
 		        total= operacion.obtenerSumatoriaSubtotalTablaTcompras(Ruta.nametablaTcompras);
 		        String inputPagar;
-		        System.out.println("total compras--- "+total);
+		        
 				if(total==0)
 				{
 					JOptionPane.showMessageDialog(null,"DEBES GENERAR UNA VENTA PARA PAGAR","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 				}else {
 				
-				inputPagar=JOptionPane.showInputDialog("Ingrese con cuanto va a pagar");
-				pagoIngresado=Float.parseFloat(inputPagar);
+					inputPagar=JOptionPane.showInputDialog("Ingrese con cuanto va a pagar");
+					pagoIngresado=Float.parseFloat(inputPagar);
+					
 				if (total>pagoIngresado){
 					JOptionPane.showMessageDialog(null,"PAGO INSUFICIENTE","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 				}else
 				{
-						double cambioDelCliente;
-						cambioDelCliente=pagoIngresado-total;
-						int idProductoCompras;
-						String valorCantidadCompras;
-						String valorDescripcionCompras;			
-						String descripcionProductos;
-						String valorCantidadProductos = null;
+					double cambioDelCliente;
+					cambioDelCliente=pagoIngresado-total;
+					int idProductoCompras;
+					String valorCantidadCompras;
+					String valorDescripcionCompras;			
+					String descripcionProductos;
+					String valorCantidadProductos = null;
 							
-							for (int j = 0; j < tablaCompras.getRowCount(); j++) {
-								
-								idProductoCompras = Integer.parseInt(tablaCompras.getValueAt(j,0).toString());
-								valorCantidadCompras=tablaCompras.getValueAt(j, 1).toString();
-								valorDescripcionCompras=tablaCompras.getValueAt(j,2).toString();
-								
-								
-									ConexionTableModel ctm=new ConexionTableModel();
-									ctm.mostrardatosProductos("",tablaProductos);//se deben mostrar todos los productos para comparar las descripciones entre las dos tablas (importante no omitir este metodo)
-									for (int i = 0; i < tablaProductos.getRowCount(); i++) {
-										descripcionProductos=tablaProductos.getValueAt(i,3).toString();
-										if (valorDescripcionCompras.equals(descripcionProductos)) {
-											valorCantidadProductos=tablaProductos.getValueAt(i,2).toString();
-											float cantidadCompras=Float.parseFloat(valorCantidadCompras);
-											float cantidadProductos=Float.parseFloat(valorCantidadProductos);
-											operacion.actualizarCantidadProductos(idProductoCompras, cantidadProductos, cantidadCompras);//se establece la existencia de cantidad en el producto
-										}
-									}							
+					for (int j = 0; j < tablaCompras.getRowCount(); j++) {
+						
+						idProductoCompras = Integer.parseInt(tablaCompras.getValueAt(j,0).toString());
+						valorCantidadCompras=tablaCompras.getValueAt(j, 1).toString();
+						valorDescripcionCompras=tablaCompras.getValueAt(j,2).toString();
+						
+						modeloTabla.mostrardatosProductos("",tablaProductos);//se deben mostrar todos los productos para comparar las descripciones entre las dos tablas (importante no omitir este metodo)
+						for (int i = 0; i < tablaProductos.getRowCount(); i++) {
+							descripcionProductos=tablaProductos.getValueAt(i,3).toString();
+							if (valorDescripcionCompras.equals(descripcionProductos)) {
+								valorCantidadProductos=tablaProductos.getValueAt(i,2).toString();
+								float cantidadCompras=Float.parseFloat(valorCantidadCompras);
+								float cantidadProductos=Float.parseFloat(valorCantidadProductos);
+								operacion.actualizarCantidadProductos(idProductoCompras, cantidadProductos, cantidadCompras);//se establece la existencia de cantidad en el producto
 							}
+						}							
+					}
 						    					
-							/*----------------------: REGISTRAR HISTORIAL DE VENTAS-----------------*/
-							String fechaVenta=LocalDate.now().toString();
+					/*----------------------: REGISTRAR HISTORIAL DE VENTAS-----------------*/
+					String fechaVenta=LocalDate.now().toString();
+					
+					operacion.insertVentas(total,fechaVenta,ca,cambioDelCliente ,"al contado");
+					int idVenta=operacion.obtenerIdTablaVentas();
+					
+					for (int i = 0; i < tablaCompras.getRowCount(); i++) {
+						
+						String idProducto=tablaCompras.getValueAt(i,0).toString();
+						String precioUnitario=tablaCompras.getValueAt(i,3).toString();
+						String cantidad=tablaCompras.getValueAt(i, 1).toString();
+						String descuentoString=tablaCompras.getValueAt(i, 5).toString();
+						
+						int idProductoInteger=Integer.parseInt(idProducto);
+						double costo_unitario=operacion.obtenerCostoProductoTablaProducto(idProductoInteger);
+						double precioUnitarioDouble=Double.parseDouble(precioUnitario);
+						float cantidadFloat=Float.parseFloat(cantidad);
+						double descuento=Double.parseDouble(descuentoString);
+	
+						operacion.insertDetalleVentas(idVenta, idProductoInteger, costo_unitario,precioUnitarioDouble, cantidadFloat,descuento);
+					}
+					
+					/*----------------------JAFETH8: FIN DE REGISTRAR HISTORIAL DE VENTAS-----------------*/
+					
+					Cambio.setText("$ "+cambioDelCliente+"");
 							
-							operacion.insertVentas(total,fechaVenta,ca,cambioDelCliente ,"al contado");
-							int idVenta=operacion.obtenerIdTablaVentas();
+					total=0;
+					modeloTabla.mostrardatosProductos("",tablaProductos);
+											
+					int pre=JOptionPane.showConfirmDialog(null, "DESEA IMPRIMIR TICKET ?","",JOptionPane.YES_NO_OPTION);
+					if (pre==0) {							
+						MetodosImprimir instanciaImprimir= new MetodosImprimir();
+						instanciaImprimir.imprimir(inputPagar, tablaCompras, TOTAL,Cambio, UsuarioLabel);
+					}else{
+						JOptionPane.showMessageDialog(null, "GRACIAS POR SU COMPRA"); 
+					}
 							
-							for (int i = 0; i < tablaCompras.getRowCount(); i++) {
-								String idProducto=tablaCompras.getValueAt(i,0).toString();
-								String precioUnitario=tablaCompras.getValueAt(i,3).toString();
-								String cantidad=tablaCompras.getValueAt(i, 1).toString();
-								String descuentoString=tablaCompras.getValueAt(i, 5).toString();
-								
-								int idProductoInteger=Integer.parseInt(idProducto);
-								String categoriaProducto=operacion.obtenerCategoriaProducto(idProductoInteger);
-								double costo_unitario=operacion.obtenerCostoProductoTablaProducto(idProductoInteger);
-								double precioUnitarioDouble=Double.parseDouble(precioUnitario);
-								
-								float cantidadFloat=Float.parseFloat(cantidad);
-								double descuento=Double.parseDouble(descuentoString);
-
-								operacion.insertDetalleVentas(idVenta, idProductoInteger, costo_unitario,precioUnitarioDouble, cantidadFloat,descuento);
-								
-							}
-							
-							/*----------------------JAFETH8: FIN DE REGISTRAR HISTORIAL DE VENTAS-----------------*/
-							Cambio.setText("$ "+cambioDelCliente+"");
-							
-							total=0;
-							
-							ConexionTableModel obj =new ConexionTableModel();
-							
-							obj.mostrardatosProductos("",tablaProductos);
-													
-							int pre=JOptionPane.showConfirmDialog(null, "DESEA IMPRIMIR TICKET ?","",JOptionPane.YES_NO_OPTION);
-							 if (pre==0) {							
-								MetodosImprimir instanciaImprimir= new MetodosImprimir();
-								instanciaImprimir.imprimir(inputPagar, tablaCompras, TOTAL,Cambio, UsuarioLabel);
-							 }
-							 else{
-								 JOptionPane.showMessageDialog(null, "GRACIAS POR SU COMPRA"); 
-							 }
-							 
-							 try {
-									
-								    operacion.truncarTablaTcompras("TRUNCATE "+Ruta.nametablaTcompras);
-									ConexionTableModel ctm1 =new ConexionTableModel("Select * from tcompras");
-									tablaCompras.setModel(ctm1.getTablemodel());
-									ConexionTableModel ctm2=new ConexionTableModel("select CANTIDAD,DESCRIPCION from productos WHERE CANTIDAD='0'");
-									ProductosAgotados.ProductosAgotados.setModel(ctm2.getTablemodel());
-									
-								} catch (SQLException e2) {
-									e2.printStackTrace();
-								}
-							 
-							 TOTAL.setText(" $ 0.0");
-							 Cambio.setText(" $ 0.0");
+				    operacion.truncarTablaTcompras("TRUNCATE "+Ruta.nametablaTcompras);
+				    modeloTabla.datosTablaTcompras("", tablaCompras,"tcompras");
+					
+					TOTAL.setText(" $ 0.0");
+					Cambio.setText(" $ 0.0");
 			  }
 			 }		
 			}

@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,16 +23,12 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class ProductosAgotados extends JDialog {
-	static ProductosAgotados dialog = new ProductosAgotados();
-	static JTable ProductosAgotados;
-
-	String Usuario="Alejandro";
-	String Contrasenia="12345";
-	String URL="jdbc:mysql://localhost/tienda2015";
 	
-    java.sql.Connection conn=null;
-    Statement stmnt=null;
-    ResultSet rs=null;
+	static ProductosAgotados dialog = new ProductosAgotados();
+	static JTable tablaProductosAgotados;
+	
+	Conectar cc= new Conectar();
+    Connection cn= cc.conexion();
     
 	/**
 	 * Launch the application.
@@ -45,6 +42,39 @@ public class ProductosAgotados extends JDialog {
 			e.printStackTrace();
 		}
 	}
+	
+
+	public void mostrarProductosAgotados(String valor){
+	    DefaultTableModel modelo= new DefaultTableModel();
+	    modelo.addColumn("CANTIDAD");
+	    modelo.addColumn("PRODUCTO");
+	    
+	    String sql="";
+	    tablaProductosAgotados.setModel(modelo);
+	    if(valor.equals(""))
+	    {
+	        sql="Select CANTIDAD,DESCRIPCION from productos WHERE CANTIDAD='0'";
+	    }
+	    else{
+	        sql="";
+	    }
+	 
+	    String []datos = new String [2];
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                datos[0]=rs.getString(1);
+                datos[1]=rs.getString(2);
+                modelo.addRow(datos);
+            }
+            
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+            System.out.println(ex.getMessage());
+        }
+	    
+	    } 
 
 	/**
 	 * Create the dialog.
@@ -61,47 +91,15 @@ public class ProductosAgotados extends JDialog {
 		scrollPane.setBounds(27, 50, 533, 179);
 		getContentPane().add(scrollPane);
 		
-		ProductosAgotados = new JTable();
-		ProductosAgotados.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-			},
-			new String[] {
-				"CANTIDAD", "PRODUCTO"
-			}
-		));
-		scrollPane.setViewportView(ProductosAgotados);
+		tablaProductosAgotados = new JTable();
+
+		scrollPane.setViewportView(tablaProductosAgotados);
 		
 		JLabel lblProductosAgotados = new JLabel("PRODUCTOS AGOTADOS");
 		lblProductosAgotados.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblProductosAgotados.setForeground(Color.RED);
 		lblProductosAgotados.setBounds(167, 25, 280, 14);
 		getContentPane().add(lblProductosAgotados);
-		
-		try {
-			conn=DriverManager.getConnection(URL,Usuario,Contrasenia);
-			stmnt=conn.createStatement();
-			ConexionTableModel ctm=new ConexionTableModel("Select CANTIDAD,DESCRIPCION from productos WHERE CANTIDAD='0'");
-			ProductosAgotados.setModel(ctm.getTablemodel());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 		
 		JButton btnImprimir = new JButton("IMPRIMIR");
 		btnImprimir.addActionListener(new ActionListener() {
@@ -115,5 +113,7 @@ public class ProductosAgotados extends JDialog {
 		label.setIcon(new ImageIcon("C:\\\\"+Ruta.imagen+"\\\\Abarrotes El Atoron\\\\Imagenes\\\\fondo_inicio.jpg"));
 		label.setBounds(0, 0, 589, 290);
 		getContentPane().add(label);
+		mostrarProductosAgotados("");
+		
 	}
 }

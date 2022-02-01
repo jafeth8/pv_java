@@ -177,12 +177,11 @@ public class ProductosParaAniadir extends JDialog {
 		JButton btnOk = new JButton("Listo!");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ConexionTableModel cmt= new ConexionTableModel();
+				
 				SqlOperaciones operacion=new SqlOperaciones();
 				int filas=tablaProductosAgregados.getRowCount();
 				
 				if(filas>0) {
-					
 					if(idApartado==0) {
 						JOptionPane.showMessageDialog(null,"Los productos a agregar no estan vinculados con ningun apartado");
 						return;

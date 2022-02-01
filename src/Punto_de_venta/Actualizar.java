@@ -241,8 +241,7 @@ public class Actualizar extends JDialog {
 					JOptionPane.showMessageDialog(null, "SE A ACTUALIZADO CORRECTAMENTE EL PRODUCTO"); 
 					
 					
-					ConexionTableModel ctm2=new ConexionTableModel("select CANTIDAD,DESCRIPCION from productos WHERE CANTIDAD='0'");
-					ProductosAgotados.ProductosAgotados.setModel(ctm2.getTablemodel());
+					ProductosAgotados.dialog.mostrarProductosAgotados("");//se actualiza el registro de productos agotados
 					
 					
 				} catch (SQLException e1){
