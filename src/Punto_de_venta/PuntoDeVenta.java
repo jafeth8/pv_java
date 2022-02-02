@@ -5,32 +5,11 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.GregorianCalendar;
-import java.util.Vector;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -44,9 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import br.com.adilson.util.Extenso;
-import br.com.adilson.util.PrinterMatrix;
 import java.awt.Toolkit;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
@@ -56,50 +32,29 @@ import imprimir.*;
 public class PuntoDeVenta extends JFrame {
 	
 	
-	private JPanel getcontentPane;
 	private JLabel usuarioLabel;
 	private JTextField cantidadProductos;
-	static JLabel TOTAL;
-	private JButton cotizar;
-	
-	
-	static JButton btnAgregar = new JButton("AGREGAR PRODUCTO");
-	static JButton btnApartar = new JButton("A CREDITO");
-	static JMenu mnClientes= new JMenu("CLIENTES");
+	private JLabel cambio;
+	private JTextField textFieldDescuento;
 	/*-------variables importantes: se ocupan para otras clases o ventanas******************----*/
 	public static int setClienteId=0;
 	public static String NombreClienteApartados="";
 	/*------------******************-----------------------------------*/
-	
-	static JMenuItem eliminarUsuarios = new JMenuItem("Eliminar");
-	private JLabel cambio; 
-	static JMenuItem mntmAgregar= new JMenuItem("Agregar");;
-	static JButton btnNewButton = new JButton("NUEVA VENTA");
-	static JButton btnActualizar = new JButton("ACTUALIZAR PRODUCTO");
-	static JTextField CodigoBarra = new JTextField();
-	private static JTextField codigoBarra;
-	static JMenu mnUsuarios= new JMenu("USUARIOS");
-	static JButton btnEliminar = new JButton("ELIMINAR PRODUCTO");
-	static Login frame1=new Login();
-	static JButton agregarCarrito = new JButton("AGREGAR AL CARRITO");
+    static JTextField codigoBarra;//debe ser statico ya que se ocupa en otras clases: Actualizar y AgregarDatos 
 	static PuntoDeVenta frame = new PuntoDeVenta();	
 	static JTable tablaCompras;
 	public static JTable tablaProductos;
-	
-    static JTextField textFieldDescuento;
-	JComboBox comboBox;
+	public static Login frameLogin=new Login();
+	JComboBox<String> comboBox;
 	SqlOperaciones instanciaSql=new SqlOperaciones();
-	
 	/**
 	 * Launch the application.
 	 */
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					frame.setVisible(true);
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -113,7 +68,6 @@ public class PuntoDeVenta extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				
 				if(instanciaSql.registro_ruta_respaldo()!=true) {
 					JOptionPane.showMessageDialog(frame,"No hay ninguna ruta registrada para el respaldo automatico","Advertencia",JOptionPane.WARNING_MESSAGE);
 				}
@@ -130,34 +84,17 @@ public class PuntoDeVenta extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\ordenador-icono-8301-96.png"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(0, 0, 1300, 734);
-		getcontentPane = new JPanel();
+		JPanel getcontentPane = new JPanel();
 		getcontentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(getcontentPane);
 	    getcontentPane.setLayout(null);
 	    
-	    TOTAL = new JLabel(" $     0.0");
+	    JLabel TOTAL = new JLabel(" $     0.0");
 	    TOTAL.setBounds(195, 564, 240, 98);
 	    TOTAL.setFont(new Font("Dialog", Font.PLAIN, 40));
 		TOTAL.setForeground(Color.BLACK);
 		TOTAL.setBackground(new Color(0, 0, 0));
 		getContentPane().add(TOTAL);
-		
-		codigoBarra = new JTextField();
-		codigoBarra.setForeground(Color.BLUE);
-		codigoBarra.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		codigoBarra.setHorizontalAlignment(SwingConstants.CENTER);
-		codigoBarra.setBounds(371, 142, 648, 30);
-		codigoBarra.setToolTipText("Ingrese el Codigo De barras del producto a buscar");
-		getContentPane().add(codigoBarra);
-		codigoBarra.setColumns(10);
-		
-		codigoBarra.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Metodos instanciaMeotodos=new Metodos();
-				instanciaMeotodos.busquedaCodigoDeBarras(tablaProductos,tablaCompras, textFieldDescuento, CodigoBarra, comboBox, cantidadProductos, TOTAL,Ruta.nametablaTcompras);	
-			}
-		});
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(27,377, 1243, 187);
@@ -185,8 +122,6 @@ public class PuntoDeVenta extends JFrame {
 		getContentPane().add(scrollPane);
 		
 		tablaProductos = new JTable();
-		
-		
 		tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tablaProductos.setToolTipText("Tabla de productos");
 		scrollPane.setViewportView(tablaProductos);
@@ -194,9 +129,9 @@ public class PuntoDeVenta extends JFrame {
 		tablaProductos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		ConexionTableModel conexionTableModel = new ConexionTableModel();
-		
 		conexionTableModel.mostrardatosProductos("", tablaProductos); //al inicializarse la tablaProductos, se le rellena con sus respectivos datos
 		
+		JButton btnAgregar = new JButton("AGREGAR PRODUCTO");
 		btnAgregar.setBounds(27, 79, 193, 52);
 		btnAgregar.setToolTipText("Agrega Productos ");
 		
@@ -208,6 +143,7 @@ public class PuntoDeVenta extends JFrame {
 		btnAgregar.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\anadir-registro-icono-8419-32.png"));
 		getContentPane().add(btnAgregar);
 		/*----------------jafeth8:btnApartar------------------------------*/
+		JButton btnApartar = new JButton("A CREDITO");
 		btnApartar.setBounds(369, 79, 224, 52);
 		getContentPane().add(btnApartar);
 		btnApartar.addActionListener(new ActionListener() {
@@ -292,6 +228,7 @@ public class PuntoDeVenta extends JFrame {
 			}//llaveActionPerformand
 		});
 		/*----------------jafeth8: fin de btnApartar-----------------------*/
+		JButton btnEliminar = new JButton("ELIMINAR PRODUCTO");
 		btnEliminar.setBounds(694, 79, 224, 52);
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -302,7 +239,6 @@ public class PuntoDeVenta extends JFrame {
 				if (flsel == -1) {
 					JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR UN PRODUCTO", "Mensaje de Error",JOptionPane.ERROR_MESSAGE);
 				} else {
-
 					int opcion=JOptionPane.showConfirmDialog(null,"Esta seguro de eliminar este producto","Advertencia",JOptionPane.YES_NO_OPTION);
 					System.out.println("opcion " +opcion);
 					if(opcion==0) {
@@ -318,14 +254,14 @@ public class PuntoDeVenta extends JFrame {
 		btnEliminar.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\ic_menu_trash_holo_light.png"));
 		getContentPane().add(btnEliminar);
 		
-		
+		JButton agregarCarrito = new JButton("AGREGAR AL CARRITO");
 		agregarCarrito.setBounds(371, 319, 222, 47);
 		agregarCarrito.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				Metodos instanciaMetodos= new Metodos();
 				try {
-					instanciaMetodos.addCarrito(tablaProductos, tablaCompras, textFieldDescuento, CodigoBarra, TOTAL,Ruta.nametablaTcompras);
+					instanciaMetodos.addCarrito(tablaProductos, tablaCompras, textFieldDescuento, codigoBarra, TOTAL,Ruta.nametablaTcompras);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -333,7 +269,6 @@ public class PuntoDeVenta extends JFrame {
 			}
 		});
 		agregarCarrito.setToolTipText("Agrega Productos a tu compra");
-		
 		agregarCarrito.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\carrito-de-compras-de-comercio-electronico-comprar-icono-4574-48.png"));
 		getContentPane().add(agregarCarrito);
 		
@@ -347,7 +282,6 @@ public class PuntoDeVenta extends JFrame {
 		botonPagar.setBounds(496, 596, 136, 43);
 		botonPagar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				float total;
 				float pagoIngresado;
 		        
@@ -446,6 +380,7 @@ public class PuntoDeVenta extends JFrame {
 		botonPagar.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\boton-pagar.jpg"));
 		getContentPane().add(botonPagar);
 		
+		JButton btnNewButton = new JButton("NUEVA VENTA");
 		btnNewButton.setBounds(27, 316, 190, 52);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -467,7 +402,7 @@ public class PuntoDeVenta extends JFrame {
 			}
 		});
 		
-		cotizar= new JButton("COTIZAR");
+		JButton cotizar= new JButton("COTIZAR");
 		cotizar.setBounds(694, 319, 224, 47);
 		cotizar.setToolTipText("Cotizar Compra");
 		getContentPane().add(cotizar);
@@ -493,16 +428,17 @@ public class PuntoDeVenta extends JFrame {
 			}
 		});
 		
-		
 		btnNewButton.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\Abarrotes El Atoron\\Imagenes\\22editar.png"));
 		getContentPane().add(btnNewButton);
 		
-		JLabel holamundo = new JLabel("TOTAL :");
-		holamundo.setBounds(27, 575, 174, 77);
-		holamundo.setForeground(Color.BLACK);
-		holamundo.setFont(new Font("Dialog", Font.PLAIN, 38));
-		holamundo.setBackground(Color.BLACK);
-		getContentPane().add(holamundo);
+		JLabel labelTituloTotal = new JLabel("TOTAL :");
+		labelTituloTotal.setBounds(27, 575, 174, 77);
+		labelTituloTotal.setForeground(Color.BLACK);
+		labelTituloTotal.setFont(new Font("Dialog", Font.PLAIN, 38));
+		labelTituloTotal.setBackground(Color.BLACK);
+		getContentPane().add(labelTituloTotal);
+		
+		JButton btnActualizar = new JButton("ACTUALIZAR PRODUCTO");
 		btnActualizar.setBounds(1014, 79, 256, 52);
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -618,7 +554,24 @@ public class PuntoDeVenta extends JFrame {
 		getcontentPane.add(textFieldDescuento);
 		textFieldDescuento.setColumns(10);
 		
-		comboBox = new JComboBox();
+		codigoBarra = new JTextField();
+		codigoBarra.setForeground(Color.BLUE);
+		codigoBarra.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		codigoBarra.setHorizontalAlignment(SwingConstants.CENTER);
+		codigoBarra.setBounds(371, 142, 648, 30);
+		codigoBarra.setToolTipText("Ingrese el Codigo De barras del producto a buscar");
+		getContentPane().add(codigoBarra);
+		codigoBarra.setColumns(10);
+		
+		codigoBarra.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Metodos instanciaMeotodos=new Metodos();
+				instanciaMeotodos.busquedaCodigoDeBarras(tablaProductos,tablaCompras, textFieldDescuento, codigoBarra, comboBox, cantidadProductos, TOTAL,Ruta.nametablaTcompras);	
+			}
+		});					
+		
+		comboBox = new JComboBox<String>();
 		comboBox.addItem("DESCRIPCION");
 		comboBox.addItem("CATEGORIA");
 		comboBox.setBounds(223, 142, 138, 30);
@@ -635,10 +588,8 @@ public class PuntoDeVenta extends JFrame {
 		JMenuItem mntmSalir = new JMenuItem("Salir");		
 		mntmSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				int pre=JOptionPane.showConfirmDialog(null, "DESEAS SALIR DEL PROGRAMA ?");
 				 if (pre==0) {
-					 //System.exit(1);
 					 frame.dispose();
 				 }
 			}
@@ -650,13 +601,13 @@ public class PuntoDeVenta extends JFrame {
 		menuProductosUnidades.setFont(new Font("Andalus", Font.BOLD, 15));
 		menuBar.add(menuProductosUnidades);
 		
-		JMenuItem itemMostrarProductoSueltos = new JMenuItem("Ver productos sueltos");
-		menuProductosUnidades.add(itemMostrarProductoSueltos);
+		JMenu mnUsuarios= new JMenu("USUARIOS");
 		mnUsuarios.setFont(new Font("Andalus", Font.BOLD, 15));
 		mnUsuarios.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\presidencia\\Imagenes\\ICONOS\\usuario-icono-9502-16.png"));
 		
 		menuBar.add(mnUsuarios);
 		
+		JMenuItem mntmAgregar= new JMenuItem("Agregar");
 		mntmAgregar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
@@ -675,6 +626,7 @@ public class PuntoDeVenta extends JFrame {
 		});
 		mnUsuarios.add(mntmAgregar);
 		
+		JMenuItem eliminarUsuarios = new JMenuItem("Eliminar");
         eliminarUsuarios.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -845,7 +797,6 @@ public class PuntoDeVenta extends JFrame {
 		menu_4.setEnabled(false);
 		menuBar.add(menu_4);
 		
-		
 		JMenu mnCerrarSesion = new JMenu("CERRAR SESION");
 		mnCerrarSesion.setFont(new Font("Andalus", Font.BOLD, 15));
 		mnCerrarSesion.setIcon(new ImageIcon("C:\\"+Ruta.imagen+"\\presidencia\\Imagenes\\ICONOS\\e.png"));
@@ -859,9 +810,9 @@ public class PuntoDeVenta extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				int pre=JOptionPane.showConfirmDialog(null, "DESEA CERRAR SESION ?");
 				if (pre==0) {
-					// TODO Auto-generated method stub
 					frame.dispose();
-					frame1.setVisible(true);
+					
+					frameLogin.setVisible(true);
 					usuarioLabel.setText("");
 	
 					TOTAL.setText("$      0.0");
@@ -883,4 +834,3 @@ public class PuntoDeVenta extends JFrame {
 		/*----------------------------FIN DE FONDO DE PANTALLA--------------------------------------------------------*/
 	}//termina constructor	
 }
-

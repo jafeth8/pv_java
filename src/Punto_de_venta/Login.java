@@ -352,9 +352,10 @@ public class Login extends JFrame {
 						 {
 							LabelVerificacion.setText("VERIFICACION EXITOSA");						     
 						    frame.setVisible(false);
-						    PuntoDeVenta.frame1.setVisible(false);
+						    PuntoDeVenta.frameLogin.setVisible(false);
                      		PuntoDeVenta.frame.setVisible(true);
                      		contrasenia.setText("");
+                     		
 						 }
               else
 						 {
@@ -362,7 +363,7 @@ public class Login extends JFrame {
 						     contrasenia.setText("");
 						     LabelVerificacion.setText("ERROR EN VERIFICAR USUARIO");
 						 }
-					} catch (HeadlessException e) {
+					} catch (HeadlessException e) {	
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {

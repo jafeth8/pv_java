@@ -198,11 +198,11 @@ public class AgregarDatos extends JDialog {
 					//insert into productos(CODIGO_BARRA,CANTIDAD,DESCRIPCION,PRECIO_UNITARIO,COSTO_UNITARIO)values(\'"+Codigo_BarraProductos.getText()+"\',\'"+CANTIDAD.getText()+"\',\'"+producto.getText()+"\',"+precio.getText()+"\","+preciocosto.getText()+");"
 					
 					ConexionTableModel ctm=new ConexionTableModel();
-					if(PuntoDeVenta.CodigoBarra.getText().equals("")) {
+					if(PuntoDeVenta.codigoBarra.getText().equals("")) {
 						ctm.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 					}else {
 						
-						ctm.mostrardatosProductos(PuntoDeVenta.CodigoBarra.getText(),PuntoDeVenta.tablaProductos);
+						ctm.mostrardatosProductos(PuntoDeVenta.codigoBarra.getText(),PuntoDeVenta.tablaProductos);
 					}
 
 					JOptionPane.showMessageDialog(null, "EL PRODUCTO FUE AGREGADO CON EXITO");

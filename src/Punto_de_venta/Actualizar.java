@@ -223,10 +223,10 @@ public class Actualizar extends JDialog {
 					stmnt.executeUpdate("UPDATE `"+Ruta.database+"`.`productos` SET  `CANTIDAD` =  '"+cantidadProducto+"',`DESCRIPCION` =  '"+Nombre.getText()+"',`PRECIO_UNITARIO` =  '"+Precio.getText()+"',`COSTO_UNITARIO` =  '"+Costounitario.getText()+"',`CATEGORIA`='"+textFieldCategoria.getText().toLowerCase()+"' WHERE  `productos`.`CODIGO_BARRA` ="+BARRA.getText()+";");
 					ConexionTableModel ctm=new ConexionTableModel();
 					
-					if(PuntoDeVenta.CodigoBarra.getText().equals("")) {
+					if(PuntoDeVenta.codigoBarra.getText().equals("")) {
 						ctm.mostrardatosProductos("",PuntoDeVenta.tablaProductos);
 					}else {
-						ctm.mostrardatosProductos(PuntoDeVenta.CodigoBarra.getText(),PuntoDeVenta.tablaProductos);
+						ctm.mostrardatosProductos(PuntoDeVenta.codigoBarra.getText(),PuntoDeVenta.tablaProductos);
 					}
 					
 					Nombre.setText("");
@@ -236,7 +236,7 @@ public class Actualizar extends JDialog {
 					BARRA.setText("");
 					Costounitario.setText("");
 					textFieldCategoria.setText("");
-					PuntoDeVenta.CodigoBarra.setText("");
+					PuntoDeVenta.codigoBarra.setText("");
 					actualizar.setVisible(false);
 					JOptionPane.showMessageDialog(null, "SE A ACTUALIZADO CORRECTAMENTE EL PRODUCTO"); 
 					

@@ -210,7 +210,7 @@ public class Metodos {
 		double total=0;
 		
 		java.sql.Connection conn=null;    
-		ResultSet rs=null;
+		
 		try {
 			conn=DriverManager.getConnection(Ruta.URL,Ruta.Usuario,Ruta.Contrasenia);
 			stmnt=conn.createStatement();
@@ -241,7 +241,6 @@ public class Metodos {
 			/*------------FIN DE VALIDACION DE CAMPO DESCUENTO----------------------------*/
 			
 			if(instanciaSqlOperaciones.busquedaPorCodigoBarra(buscador.getText())){
-			
 				//mostrarProductoCodigoDeBarra("");
 				ctm.mostrarProductoCodigoDeBarra(buscador.getText(), tablaProductos);
 				/*------------------------------jafeth8-------------------------------------------*/
@@ -276,6 +275,7 @@ public class Metodos {
 					JOptionPane.showMessageDialog(null,"PRODUCTO INSUFICIENTE","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
 					//ConexionTableModel ctm1 = new ConexionTableModel(Ruta.query);
 					//JTResultado1.setModel(ctm1.getTablemodel());
+					PuntoDeVenta.codigoBarra.setText("");//limpia el campo de busqueda ya que seria molesto borrar todo el codigo de barras manualmente ejemplo: 7503005496890
 				}
 				else{
 						if(instanciaSqlOperaciones.existenciaEnComprasPorDescripcion(descripcion,nameTablaCompras) )
@@ -303,6 +303,7 @@ public class Metodos {
 									    double a=((Double.parseDouble(cantidadTablaProductosAgregados)+cantidadJtexfiel)*resultadoDescuento);
 										if (cantidadEntablaProductos<x) {
 											JOptionPane.showMessageDialog(null,"PRODUCTO INSUFICIENTE","Mensaje de Error", JOptionPane.ERROR_MESSAGE);
+											PuntoDeVenta.codigoBarra.setText("");//mismo caso, limpia el campo de busqueda ya que seria molesto borrar todo el codigo de barras manualmente ejemplo: 7503005496890
 											return;
 										}else{
 											stmnt.executeUpdate("UPDATE  `"+Ruta.database+"`.`"+nameTablaCompras+"` SET  `CANTIDAD` =  '"+x+"',`SUB_TOTAL` =  '"+a+"' WHERE DESCRIPCION='"+descripcion+"'");
@@ -363,7 +364,9 @@ public class Metodos {
 		    /*-----------------------------------JAFETH8---------------------------------------*/
 			}//FIN DEL IF CODIGO DE BARRAS
 			else if (MetodoBusqueda.equals("DESCRIPCION")) {
+				
 				ctm.mostrardatosProductos(buscador.getText(), tablaProductos);
+				
 				if(instanciaSqlOperaciones.busquedaDescripcion(buscador.getText())==false) {
 					JOptionPane.showMessageDialog(null,"El valor no coincide con ningun tipo busqueda");
 				}
